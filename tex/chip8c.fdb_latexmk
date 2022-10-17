@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1666032250 "chip8c.tex" "chip8c.pdf" "chip8c" 1666032250
+["pdflatex"] 1666047865 "chip8c.tex" "chip8c.pdf" "chip8c" 1666047865
   "/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1650183167 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1650183167 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1650183167 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -23,10 +23,10 @@
   "/usr/share/texmf-dist/tex/latex/base/size10.clo" 1650183167 8448 96f18c76bf608a36ee6fbf021ac1dd32 ""
   "/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1650183167 31644 9b75b7ffdb38fbd7bb4502cd6b086a3c ""
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1650183167 39911 2da6c67557ec033436fe5418a70a8a61 ""
-  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1662677281 334215 ad2feb41952e3720830b65f83a01c5b0 ""
-  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1662677274 2927663 180874feeb48495e10b05df395c7da3c ""
-  "chip8c.aux" 1666032250 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "chip8c.tex" 1666032247 478 5b6e97c771c0d74f5aea3b28cb90ae66 ""
+  "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1665955146 334215 ad2feb41952e3720830b65f83a01c5b0 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1665955139 2927662 26507eb4bc5027250945fcf3bade2946 ""
+  "chip8c.aux" 1666047865 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "chip8c.tex" 1666047858 606 462f7a48a8de9a97062cea0af9a06ab8 ""
   (generated)
   "chip8c.aux"
   "chip8c.log"

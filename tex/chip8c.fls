@@ -1,4 +1,4 @@
-PWD /home/kp/Desktop/code/chip8c/tex
+PWD /home/kp/Code/LowLevel/C/chip8c/tex
 INPUT /usr/share/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
 INPUT chip8c.tex
