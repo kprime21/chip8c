@@ -43,21 +43,52 @@ Compact Hexadecimal Interpretive Programming – 8-bit
 \end{itemize}
 \subsection*{Display}
 \begin{itemize}
-	\item 60Hz - 60 times per second 
+	\item 60Hz - 60 times per second
+	\item sprite consists of 8 bits
+	\item sprites are between 1 and 15 bytes tall
+	\item 0 bits are transparent and 1 bits flip pixel locations
 \end{itemize}
-\subsection*{Main}
+\subsection*{Stack}
 \begin{itemize}
-	\item Read through emulator guide
+	\item stack(LiFo) to call and return from subroutines
+	\item 16 bit addresses (12 bits useful) are saved here
 \end{itemize}
-\subsection*{To Do}
+\subsection*{Timers}
+\begin{itemize}
+	\item two timer registers - the delay timer and sound timer
+	\item one byte in size and if above 0, decremented by 1 60 times per second (60Hz)
+	\item sound timer beeps as long as it's above 0
+\end{itemize}
+\subsection*{Keypad}
+\begin{itemize}
+	\item 123C
+	\item 456D
+	\item 789E
+	\item A0BF
+\end{itemize}
+\subsection*{Fetch/decode/excute loop}
+\begin{itemize}
+	\item fetch the instruction from memory at current PC (program counter)
+	\item decode the instruction to find what emulator should do
+	\item execute instruction and do what it tells you
+	\item this loop's speed has to be set so that it does not run too fast (700Hz)
+	\item fetch: read instruction in PC, two successive bytes and combine into one 16 bit instruction, increment PC by 2
+	\item decode: switch statement checking first half of instruction 
+	\item nibbles after first used for decoding, extract these before decoding from opcode
+	\begin{itemize}
+		\item X - second nibble
+		\item Y - third nibble
+		\item N - fourth nibble
+		\item NN - third and fourth nibble - 8 bit immd number
+		\item NNN - second, third and fourth nibble - 12 bit immd address 
+	\end{itemize}
+	\item execute: do what each instruction should do in each case of the switch
+\end{itemize}
+\section*{Main}
 \begin{itemize}
 	\item Setup directory to ignore makefile outputs
-\end{itemize}
-
-\subsection*{Finished}
-\begin{itemize}
-	\item Set up SDL libray in C file
-	\item Set up make file for compilation
+	\item read through instructions
+	\item make SDL display at 60fps 
 \end{itemize}
 
 

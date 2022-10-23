@@ -1,35 +1,52 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 
 
 int main(){
-    SDL_Window *window;                    // Declare a pointer
+    SDL_Window *win = NULL;
+    SDL_Renderer *renderer = NULL;
+    int posX = 100, posY = 100, width = 320, height = 240;
+    SDL_bool loopShouldStop = SDL_FALSE;
 
-    SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
+    SDL_Init(SDL_INIT_VIDEO);
 
-    // Create an application window with the following settings:
-    window = SDL_CreateWindow(
-        "An SDL2 window",                  // window title
-        SDL_WINDOWPOS_UNDEFINED,           // initial x position
-        SDL_WINDOWPOS_UNDEFINED,           // initial y position
-        640,                               // width, in pixels
-        480,                               // height, in pixels
-        SDL_WINDOW_OPENGL                  // flags - see below
-    );
-      if (window == NULL) {
-        // In the case that the window could not be made...
-        printf("Could not create window: %s\n", SDL_GetError());
-        return 1;
+    win = SDL_CreateWindow("Chip8 Emulator", posX, posY, width, height, 0);
+
+    renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+
+
+    while (!loopShouldStop)
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    loopShouldStop = SDL_TRUE;
+                    break;
+            }
+        }
+
+    for(int y = 0; y < 240; y++){
+
+        for(int x = 0; x < 320; x++){
+            int randoma = (rand() % 255) +1;
+            int randomb = (rand() % 255) +1;
+            int randomc = (rand() % 255) +1;
+
+            SDL_SetRenderDrawColor(renderer, randoma, randomb, randomc, 255);
+            SDL_RenderDrawPoint(renderer,x,y);
+        }
+    }
+    SDL_RenderPresent(renderer);
     }
 
-    // The window is open: could enter program loop here (see SDL_PollEvent())
+   
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(win);
 
-    SDL_Delay(3000);  // Pause execution for 3000 milliseconds, for example
-
-    // Close and destroy the window
-    SDL_DestroyWindow(window);
-
-    // Clean up
     SDL_Quit();
     
 
