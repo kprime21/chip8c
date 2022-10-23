@@ -8,6 +8,43 @@
 
 
 \section*{Overview}
+Compact Hexadecimal Interpretive Programming – 8-bit 
+\subsection*{Components}
+\begin{itemize}
+	\item Memory - 4kB ram (4096 bytes - 4096 address lines each line is 1 byte)
+	\item Display - 64 x 32 pixels 
+	\item Registers
+		\begin{itemize}
+			\item Program Counter (16 bits)
+			\item Index Register (16 bits) 
+			\item Stack - call subroutines and functions (16 bits)
+			\item Delay timer - decremented at 60Hz (8 bits)
+			\item Sound timer - decremented at 60Hz (8 bits)
+			\item 15 General purpose registers - V0 - VF (8 bits)
+		\end{itemize}
+\end{itemize}
+\subsection*{Memory}
+\begin{itemize}
+	\item all memory is RAM, 4096 bytes. 
+		\begin{itemize}
+			\item 4096 addressable lines
+			\item 12 bits needed
+			\item each addressable line represents an addresss of 1 byte.
+		\end{itemize}
+	\item interpreter located 0x000-0x1FF (not in our case)
+	\item program located 0x200 - 0x...
+	\item font located before program 0x000-0x1FF (popular area - 0x050 - 0x09F)
+\end{itemize}
+\subsection*{Font}
+\begin{itemize}
+	\item font character should be 4px x 5px
+	\item first byte is the character (draw vertically in nvim to see)
+	\item stored in memory, index register set to specific font in memory to draw it
+\end{itemize}
+\subsection*{Display}
+\begin{itemize}
+	\item 60Hz - 60 times per second 
+\end{itemize}
 \subsection*{Main}
 \begin{itemize}
 	\item Read through emulator guide
