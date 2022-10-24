@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
-
+//graphics here
 
 int main(){
     SDL_Window *win = NULL;
@@ -28,16 +28,23 @@ int main(){
                     break;
             }
         }
-
+    int oldx = -1, oldy = -1;
     for(int y = 0; y < 240; y++){
 
         for(int x = 0; x < 320; x++){
             int randoma = (rand() % 255) +1;
             int randomb = (rand() % 255) +1;
             int randomc = (rand() % 255) +1;
-
+            
             SDL_SetRenderDrawColor(renderer, randoma, randomb, randomc, 255);
             SDL_RenderDrawPoint(renderer,x,y);
+            if(oldx != -1 && oldy != -1){
+                // printf("x %d y %d \n", oldx, oldy);
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderDrawPoint(renderer,oldx,oldy);
+            }
+            oldx = x; 
+            oldy = y;
         }
     }
     SDL_RenderPresent(renderer);
