@@ -25,9 +25,12 @@ int font_reg[80] = {
 unsigned char memory[4096];
 
 typedef struct chip8{
+    //hold the 2 byte opcode
     unsigned int opcode;
+    //addressing registers
     unsigned int program_counter;
     unsigned int index;
+    //return from subroutine
     unsigned int stack[0x10];
     unsigned int*stack_ptr;
     //60Hz timer registers 
@@ -49,12 +52,12 @@ typedef struct chip8{
     unsigned short VC;
     unsigned short VD;
     unsigned short VE;
-    //used as a flag register
+    //flag register
     unsigned short VF; 
 } chip8;
 
 
-
+//set addressing registers to 0
 void initialize(chip8 *cpu){
     for(int i = 0;i < 16; i++){
         cpu->program_counter = 0x00;
@@ -64,15 +67,13 @@ void initialize(chip8 *cpu){
             cpu->stack[i] = 0;
         }
     }
-
     //load the fonts into memory
-
     for(int i = 0; i < 80; i++){
         memory[i] = font_reg[i];
     }
 }
 
-
+//fetch, decode, and execute cycle
 void cycle(chip8 *cpu){
     //fetch
     cpu->opcode = memory[cpu->program_counter] << 8 | memory[cpu->program_counter + 1];
@@ -368,28 +369,12 @@ void cycle(chip8 *cpu){
     
 }
 int main(){
-//the display screen
-unsigned char gfx[64 * 32];
-//make cpu
-chip8 test;
-initialize(&test);
-cycle(&test);
+    //the display screen
+    unsigned char gfx[64 * 32];
+    //make cpu
+    chip8 test;
+    initialize(&test);
+    cycle(&test);
 
-
-FILE *fp, *fr;
-
-fp = fopen("./roms/PONG", "rb");
-fseek(fp, 0 , SEEK_END);
-long romSize = ftell(fp);
-unsigned char buffer[romSize]; 
-rewind(fp);
-printf("%d\n", romSize);
-fread(buffer,sizeof(buffer),1,fp);
-
-fr = fopen("pong.txt", "w+");
-for(int i = 0; i < romSize; i++){
-    fprintf(fr, "0x%08x\n", buffer[i]);
-}
-fclose(fr);
 }
 
