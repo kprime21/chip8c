@@ -123,12 +123,19 @@ Compact Hexadecimal Interpretive Programming – 8-bit
 	\item Fx65 - LD Vx, [I] - Read values from memory and store them from V0 through Vx.
 \end{enumerate}
 
-
+\section*{File Structure}
+\begin{itemize}
+	\item cpu.c - Contains the registers for the Chip8 emulator, the memory that the program is read into and the font that is read at the start
+	\item graphics.c - Contains the display graphics for the Chip8 emulator using SDL2
+	\item main.c - Driver program that will read in the rom and start the CPU and graphics
+	\item chip8d.c - Dissassembler to dissassemble the roms, use hexeditor for clarity
+\end{itemize}
 \section*{Main}
 \begin{itemize}
 	\item Setup directory to ignore makefile outputs
+	\item Sort out opcodes so they don't overlap
+	\item Start on fetch->decode->execute cycle
 \end{itemize}
-
 
 \section*{Reference}
 \begin{itemize}
