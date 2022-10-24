@@ -8,6 +8,9 @@ int main(){
     SDL_Renderer *renderer = NULL;
     int posX = 100, posY = 100, width = 320, height = 240;
     SDL_bool loopShouldStop = SDL_FALSE;
+    int fps = 120;
+    int desiredDelta = 1000/fps;
+    
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -18,6 +21,8 @@ int main(){
 
     while (!loopShouldStop)
     {
+        //start time
+        int startTime = SDL_GetTicks();
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
@@ -38,13 +43,15 @@ int main(){
             
             SDL_SetRenderDrawColor(renderer, randoma, randomb, randomc, 255);
             SDL_RenderDrawPoint(renderer,x,y);
-            if(oldx != -1 && oldy != -1){
-                // printf("x %d y %d \n", oldx, oldy);
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-                SDL_RenderDrawPoint(renderer,oldx,oldy);
+
+            //set FPS to 60
+            int delta = SDL_GetTicks() - startTime;
+            if(delta < desiredDelta){
+                SDL_Delay(desiredDelta - delta);
             }
-            oldx = x; 
-            oldy = y;
+            
+          
+         
         }
     }
     SDL_RenderPresent(renderer);

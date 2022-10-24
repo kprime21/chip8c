@@ -84,11 +84,47 @@ Compact Hexadecimal Interpretive Programming – 8-bit
 	\end{itemize}
 	\item execute: do what each instruction should do in each case of the switch
 \end{itemize}
+\subsection*{Opcodes}
+\begin{enumerate}
+	\item 0nnn - ignored by modern interpreters.
+	\item 00E0 - CLS, clear the display.
+	\item 00EE - RET, return from subroutine.
+	\item 1nnn - JP addr, program counter set to nnn.
+	\item 2nnn - CALL addr, increment stack pointer then place current PC on top of stack, then set PC to nnn.
+	\item 3xkk - SE Vx byte, skip next instruction if Vx == kk, PC+=2.
+	\item 4xkk - SNE Vx byte, skip next instruction if Vx != kk, PC+=2.
+	\item 5xy0 - SE Vx, Vy, skip next instruction if Vx == Vy, PC+=2.
+	\item 6xkk - LD Vx, byte - load kk into Vx.
+	\item 7xkk - ADD Vx, byte - add value kk to register Vx, store result in Vx.
+	\item 8xy0 - LD Vx, Vy - store value of register Vy in register Vx.
+	\item 8xy1 - OR Vx, Vy - bitwise OR then store in Vx.
+	\item 8xy2 - AND Vx, Vy - bitwise AND then store in Vx.
+	\item 8xy3 - XOR Vx, Vy - bitwise XOR and then store in Vx.
+	\item 8xy4 - ADD Vx, Vy - add Vx, Vy, result greater than 255 sets VF flag, only lowest 8 bits stored in Vx.
+	\item 8xy5 - SUB Vx, Vy - Vx > Vy, Vf set to 1, otherwise 0. Subtract Vy from Vx and store in Vx.
+	\item 8xy6 - SHR Vx (, Vy) - LSB of Vx is 1, set Vf to 1. Otherwise 0. Vx divided by 2.
+	\item 8xy7 - SUBN Vx, Vy - Vy > Vx, Vf set to 1, otherwise 0. Subtract Vx from Vy and store in Vx. 
+	\item 8xyE - SHL Vx (, Vy) - MSB of Vx is 1, set Vf to 1. Otherwise 0. Vx multiplied by 2.
+	\item 9xy0 - SNE Vx, Vy - Vx and Vy compared, if not equal, PC+=2.
+	\item Annn - LD I, addr - Index register is set to addr.
+	\item Bnnn - JP V0, addr - Program Counter is set to nnn+V0.
+	\item Cxkk - RND Vx, byte - Generate random number AND with kk, store in Vx.
+	\item Dxyn - DRW Vx, Vy, nibble - Read n bytes from memory staring at address stored in Index. Bytes are displayed as sprites on screen at coord(Vx,Vy). Sprites are XOR'd onto screen, any overlapping part of sprite will be wrapped around screen. If sprite collides with another sprite then set Vf to 1.
+	\item Ex9E - SKP Vx - Skip next instruction if key with value Vx is pressed, PC+=2.
+	\item ExA1 - SKNP Vx - Skip next instruction if key with value Vx is not pressed, PC+=2.
+	\item Fx07 - LD Vx, DT - Set the value of Vx to value of delay timer.
+	\item Fx0A - LD Vx, k - Execution stops until key is pressed, store value of key in Vx.
+	\item Fx15 - LD DT, Vx - Set the value of delay timer to value of Vx.
+	\item Fx18 - LD ST, Vx - Set the value of sound timer to value of Vx.
+	\item Fx1E - ADD I, Vx - Value of Index register and Vx added and stored in Index register.
+	\item Fx29 - LD F, Vx - Index register is set equal to the location for hexadecimal sprite corresponding to value in Vx.
+	\item Fx33 - LD B, Vx - Store BCD(Vx) in Index register, Index+1, Index+2.
+	\item Fx55 - LD [I], Vx - Store registers V0 through Vx in memory starting at location in Index register.
+	\item Fx65 - LD Vx, [I] - Read values from memory and store them from V0 through Vx.
+\end{enumerate}
 \section*{Main}
 \begin{itemize}
 	\item Setup directory to ignore makefile outputs
-	\item read through instructions
-	\item make SDL display at 60fps 
 \end{itemize}
 
 
