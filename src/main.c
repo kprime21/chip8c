@@ -33,7 +33,6 @@ int main(){
                     break;
             }
         }
-    int oldx = -1, oldy = -1;
     for(int y = 0; y < 240; y++){
 
         for(int x = 0; x < 320; x++){
