@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 //registers here
 
 
@@ -22,7 +23,7 @@ int font_reg[80] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-unsigned char memory[4096];
+unsigned char memory[0x1000];
 
 typedef struct chip8{
     //hold the 2 byte opcode
@@ -71,6 +72,19 @@ void initialize(chip8 *cpu){
     for(int i = 0; i < 80; i++){
         memory[i] = font_reg[i];
     }
+}
+
+void load_rom(chip8 *cpu, char *rom){
+    FILE *fp;
+    char path[100] = "./roms/";
+    strcat(path, rom);
+    printf("rom name %s\n", path);
+    fp = fopen(path, "rb");
+    fseek(fp, 0, SEEK_END);
+    long size = ftell(fp);
+    rewind(fp);
+    unsigned char* temp = memory + 0x200;
+    fread(temp, sizeof(sizeof(temp)), size, fp);
 }
 
 //fetch, decode, and execute cycle
@@ -375,6 +389,6 @@ int main(){
     chip8 test;
     initialize(&test);
     cycle(&test);
-
+    load_rom(&test, "PONG");
 }
 
