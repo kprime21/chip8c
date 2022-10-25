@@ -14,6 +14,12 @@ typedef struct chip8{
     unsigned char V[0x10];
 } chip8;
 
+void initialize(chip8 *cpu);
+void load_rom(chip8 *cpu, char *rom);
+void cycle(chip8 *cpu);
+
+
 extern int font_reg[80];
 extern unsigned char memory[0x1000];
 extern unsigned char gfx[64 * 32];
+extern unsigned char key[0x10];

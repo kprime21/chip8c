@@ -27,7 +27,8 @@ int font_reg[80] = {
 unsigned char memory[0x1000];
 //graphics screen
 unsigned char gfx[64 * 32];
-
+//keyboard
+unsigned char key[0x10];
 
 //set addressing registers to 0
 void initialize(chip8 *cpu){
@@ -72,9 +73,15 @@ void cycle(chip8 *cpu){
         case 0x0000:
             switch(cpu->opcode & 0x00FF){
                 case 0x00E0:
+                    //2048 is size
+                    for(int i = 0; i<2048; i++){
+                        gfx[i] = 0;
+                    }
                     printf("CLS, clear the display\n");
                     break;
                 case 0x00EE:
+                    cpu->program_counter = cpu->stack[cpu->stackptr];
+                    cpu->stackptr--;
                     printf("RET, return from subroutine\n");
                     break;
                 default:
@@ -211,16 +218,24 @@ void cycle(chip8 *cpu){
             break;
         // Draw
         case 0xD000: 
-            printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
-            cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
+            // printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
+            // cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
+             
             break;
         // Key press
         case 0xE000:
             switch(cpu->opcode & 0x00FF){
                 case 0x009E:
+                     if (key[(cpu->opcode & 0x0F00) >> 8] != 0){
+                        cpu->program_counter += 2;
+                     }
+                        
                     printf("Skip next instruction if key in Vx (0x%01X) is pressed, PC+=2\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x00A1:
+                    if (key[(cpu->opcode & 0x0F00) >> 8] == 0){
+                            cpu->program_counter += 2;
+                        }
                     printf("Skip next instruction if key in Vx (0x%01X) is not perssed, PC+=2\n", cpu->opcode & 0x0F00);
                     break;   
             }
@@ -229,18 +244,27 @@ void cycle(chip8 *cpu){
         case 0xF000:
             switch(cpu->opcode & 0x00FF){
                 case 0x0007:
+                    cpu->V[cpu->opcode & 0x0F00] = cpu->delay_timer;
                     printf("Vx 0x%01X  = Delay Timer\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x000A:
+                    for(int i = 0; i < 0x10; i++){
+                        if(key[i]){
+                            cpu->V[cpu->opcode & 0x0F00] = key[i];
+                        }
+                    }
                     printf("Exection stops until a key is pressed, store value of key in Vx 0x%01X\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0015:
-                    printf("Set delay timer to value of Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
+                    cpu->delay_timer = cpu->V[cpu->opcode & 0x0F00];
+                    printf("Set delay timer to cpu->value of Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0018:
+                    cpu->sound_timer = cpu->V[cpu->opcode & 0x0F00];
                     printf("Set sound timer to value of Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x001E:
+                    cpu->index = cpu->index + cpu->V[cpu->opcode & 0x0F00];
                     printf("Index register + Vx 0x%01X (2nd byte) is stored in Index Register\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0029:

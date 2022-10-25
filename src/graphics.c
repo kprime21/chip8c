@@ -6,13 +6,20 @@
 //graphics here
 
 int main(){
+    chip8 test;
+     initialize(&test);
+        load_rom(&test, "PONG");
+    for(int i = 0; i < 40; i++){
+       
+        cycle(&test);
+    }
     SDL_Window *win = NULL;
     SDL_Renderer *renderer = NULL;
     int posX = 100, posY = 100, width = 320, height = 240;
     SDL_bool loopShouldStop = SDL_FALSE;
     int fps = 120;
     int desiredDelta = 1000/fps;
-    chip8 test;
+    
     printf("%d\n", font_reg[0]);
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -43,7 +50,7 @@ int main(){
             int randomc = (rand() % 255) +1;
             
             SDL_SetRenderDrawColor(renderer, randoma, randomb, randomc, 255);
-            SDL_RenderDrawPoint(renderer,x,y);
+            SDL_RenderDrawPoint(renderer,0,0);
 
             //set FPS to 60
             int delta = SDL_GetTicks() - startTime;
