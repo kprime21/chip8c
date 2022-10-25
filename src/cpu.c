@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cpu.h"
 //registers here
 
 
@@ -26,22 +27,6 @@ int font_reg[80] = {
 unsigned char memory[0x1000];
 //graphics screen
 unsigned char gfx[64 * 32];
-
-typedef struct chip8{
-    //hold the 2 byte opcode
-    unsigned short opcode;
-    //addressing registers
-    unsigned short program_counter;
-    unsigned short index;
-    //return from subroutine
-    unsigned short stack[0x10];
-    unsigned short stackptr;
-    //60Hz timer registers 
-    unsigned char delay_timer;
-    unsigned char sound_timer;
-    //GP registers
-    unsigned char V[0x10];
-} chip8;
 
 
 //set addressing registers to 0
@@ -275,14 +260,3 @@ void cycle(chip8 *cpu){
         }
     
 }
-int main(){
-    
-    //make cpu
-    chip8 test;
-    initialize(&test);
-    load_rom(&test, "PONG");
-    for(int i = 0; i < 245; i+=2){
-        cycle(&test);
-    }
-}
-

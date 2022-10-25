@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
+#include "cpu.h"
+
 //graphics here
 
 int main(){
@@ -10,8 +12,8 @@ int main(){
     SDL_bool loopShouldStop = SDL_FALSE;
     int fps = 120;
     int desiredDelta = 1000/fps;
-    
-
+    chip8 test;
+    printf("%d\n", font_reg[0]);
     SDL_Init(SDL_INIT_VIDEO);
 
     win = SDL_CreateWindow("Chip8 Emulator", posX, posY, width, height, 0);
