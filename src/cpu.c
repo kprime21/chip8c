@@ -119,8 +119,10 @@ void cycle(chip8 *cpu){
             printf("skip next instruction if Vx 0x%01X == Vy 0x%01X\n", cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
             break;
         case 0x6000: //... 0x6FFF:
-            cpu->V[cpu->opcode & 0x0F00] = (cpu->opcode & 0x00FF );
+           
+            cpu->V[(cpu->opcode & 0x0F00) >> 8] = (cpu->opcode & 0x00FF );
             printf("Load  0x%02X into Vx 0x%01X\n", cpu->opcode & 0x00FF,cpu->opcode & 0x0F00);
+           
             break;
         case 0x7000: //... 0x7FFF:
             cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] + (cpu->opcode & 0x00FF ); 
@@ -218,6 +220,30 @@ void cycle(chip8 *cpu){
             break;
         // Draw
         case 0xD000: 
+            unsigned short posx = cpu->V[(cpu->opcode & 0x0F00)>>8];
+            unsigned short posy = cpu->V[(cpu->opcode & 0x00F0)>>4];
+            unsigned short nbyte = cpu->V[cpu->opcode & 0x000F];
+            unsigned short currindex = cpu->index;
+            
+            
+            
+            printf("these are the values 0x%01x 0x%01x %d \n", posx, posy, nbyte);
+            for(int i = 0; i < nbyte; i++){
+                for(int i = 0; i < memory[currindex & 0x00FF]; i++){
+                    if(memory[currindex & 0x00FF]){
+                        gfx[posx*64 + posy] = 1;
+                    }
+                    currindex +=8;
+                }
+                
+            }
+            for(int i = 0; i < 64*32; i++){
+                if(!(i % 64)){
+                    printf("\n");
+                }
+                printf("%d", gfx[i]);
+            }
+
             // printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
             // cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
              

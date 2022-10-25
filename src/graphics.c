@@ -9,13 +9,12 @@ int main(){
     chip8 test;
      initialize(&test);
         load_rom(&test, "PONG");
-    for(int i = 0; i < 40; i++){
-       
+    for(int i = 0; i < 6; i++){
         cycle(&test);
     }
     SDL_Window *win = NULL;
     SDL_Renderer *renderer = NULL;
-    int posX = 100, posY = 100, width = 320, height = 240;
+    int posX = 100, posY = 100, width = 64, height = 32;
     SDL_bool loopShouldStop = SDL_FALSE;
     int fps = 120;
     int desiredDelta = 1000/fps;
