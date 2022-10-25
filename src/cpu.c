@@ -97,64 +97,105 @@ void cycle(chip8 *cpu){
             }
             break;
         case 0x1000: //... 0x1FFF:
+            cpu->program_counter = cpu->opcode & 0x0FFF;
             printf("JP addr, jump to address that is 0x%03X\n",cpu->opcode & 0x0FFF);
             break;
         case 0x2000: //... 0x2FFF:
+            cpu->stackptr++;
+            cpu->stack[cpu->stackptr] = cpu->program_counter;
+            cpu->program_counter = cpu->opcode & 0x0FFF;
             printf("CALL addr, increment stack pointer then place current PC on top of stack, then set PC to 0x%03X\n", cpu->opcode & 0x0FFF);
             break;
             //where x is the 2nd byte and kk is the 3rd and 4th byte
         case 0x3000: //... 0x3FFF:
+            if(cpu->V[cpu->opcode & 0x0F00] == cpu->opcode & 0x00FF){
+                cpu->program_counter+=2;
+            }
             printf("skip next instruction if Vx 0x%01X == 0x%02X\n", cpu->opcode & 0x0F00, cpu->opcode & 0x00FF);
             break;
         case 0x4000: //... 0x4FFF:
+        if(cpu->V[cpu->opcode & 0x0F00] != cpu->opcode & 0x00FF){
+                cpu->program_counter+=2;
+            }
             printf("skip next instruction if Vx 0x%01X != 0x%02X\n", cpu->opcode & 0x0F00, cpu->opcode & 0x00FF);
             break;
             //Vx is 2nd byte and Vy is third byte
         case 0x5000: //... 0x5FF0:
+            if(cpu->V[cpu->opcode & 0x0F00] != cpu->V[cpu->opcode & 0x00F0]){
+                cpu->program_counter+=2;
+            }
             printf("skip next instruction if Vx 0x%01X == Vy 0x%01X\n", cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
             break;
         case 0x6000: //... 0x6FFF:
+            cpu->V[cpu->opcode & 0x0F00] = (cpu->opcode & 0x00FF );
             printf("Load  0x%02X into Vx 0x%01X\n", cpu->opcode & 0x00FF,cpu->opcode & 0x0F00);
             break;
         case 0x7000: //... 0x7FFF:
+            cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] + (cpu->opcode & 0x00FF ); 
             printf("add 0x%02X to register Vx 0x%01X and store in Vx\n", cpu->opcode & 0x00FF,cpu->opcode & 0x0F00);
             break;
         // case 0x8000 ... 0x8FF0:
         case 0x8000:
             switch(cpu->opcode & 0x000F){
             case 0x0000:
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x00F0];
                 printf("store Vy 0x%01X into register Vx 0x%01X\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8001 ... 0x8FF1:
             case 0x0001:
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] | cpu->V[cpu->opcode & 0x00F0];
                 printf("Vx 0x%01X OR Vy 0x%01X and store in Vx\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8002 ... 0x8FF2:
             case 0x0002:
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] & cpu->V[cpu->opcode & 0x00F0];
                 printf("Vx 0x%01X  AND Vy 0x%01X and store in Vx\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8003 ... 0x8FF3:
             case 0x0003:
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] ^ cpu->V[cpu->opcode & 0x00F0];
                 printf("Vx 0x%01X XOR Vy 0x%01X and store in Vx\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8004 ... 0x8FF4:
             case 0x0004:
+                if((cpu->V[cpu->opcode & 0x0F00] + cpu-> V[cpu->opcode & 0x00F0]) > 255){
+                    cpu->V[0x0F] = 1;
+                }
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] + cpu-> V[cpu->opcode & 0x00F0];
+                
                 printf("Vx 0x%01X + Vy 0x%01X, overflow set Vf to 1, store 8 lower bits in Vx\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8005 ... 0x8FF5:
             case 0x0005:
+                if(cpu->V[cpu->opcode & 0x0F00] > cpu-> V[cpu->opcode & 0x00F0]){
+                    cpu->V[0x0F] = 1;
+                }
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] - cpu-> V[cpu->opcode & 0x00F0];
                 printf("Vx 0x%01X = Vy 0x%01X - Vx, Vx>Vy set Vf to 1\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8006 ... 0x8FF6:
             case 0x0006:
+                if(cpu->V[cpu->opcode & 0x0F00] & 0x0001 == 0x0001){
+                    cpu->V[0x0F] = 1;
+                }
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] >> 1;
+                
                 printf("Vx 0x%01X >> Vy 0x%01X, if LSB of Vx is 1, set Vf to 1\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x8007 ... 0x8FF7:
             case 0x0007:
+                if(cpu->V[cpu->opcode & 0x00F0] > cpu-> V[cpu->opcode & 0x0F00]){
+                    cpu->V[0x0F] = 1;
+                }
+                cpu->V[cpu->opcode & 0x00F0] = cpu->V[cpu->opcode & 0x00F0] - cpu-> V[cpu->opcode & 0x0F00];
                 printf("Vx 0x%01X = Vy 0x%01X - Vx, Vy>Vx set Vf to 1\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             // case 0x800E ... 0x8FFE:
             case 0x000E:
+                if(cpu->V[cpu->opcode & 0x0F00] & 0x8000 == 0x8000){
+                    cpu->V[0x0F] = 1;
+                }
+                cpu->V[cpu->opcode & 0x0F00] = cpu->V[cpu->opcode & 0x0F00] << 1;
                 printf("Vx 0x%01X = Vx << Vy 0x%01X, if MSB of Vx is 1, set Vf to 1\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             default:
@@ -163,25 +204,32 @@ void cycle(chip8 *cpu){
             break;
         // case 0x9000 ... 0x9FF0:
         case 0x9000:
+            if(cpu->V[cpu->opcode & 0x00F0] != cpu-> V[cpu->opcode & 0x0F00]){
+                    cpu->program_counter +=2;
+            }
             printf("if Vx 0x%01X !=Vy 0x%01X, PC+=2\n", cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
             break;
         // case 0xA000 ... 0xAFFF:
         case 0xA000:
+            cpu->index = cpu->opcode & 0x0FFF;
             printf("Index register is set to addr  0x%03X in last three bytes\n", cpu->opcode & 0x0FFF);
             break;
         // case 0xB000 ... 0xBFFF:
         case 0xB000:
+            cpu->program_counter = cpu->V[0] + (cpu->opcode & 0x0FFF);
             printf("Program counter register is set to V0 + last three bytes 0x%03X \n", cpu->opcode & 0x0FFF);
             break;
         // case 0xC000 ... 0xCFFF:
         case 0xC000:
+            cpu->V[cpu->opcode & 0x0F00] = (rand() % 256) & (cpu->opcode & 0x00FF);
             printf("Generate a random number, then AND with last two bytes  0x%02X and store in Vx(0x%01X)\n", cpu->opcode & 0x00FF,cpu->opcode & 0x0F00);
             break;
-        // case 0xD000 ... 0xDFFF:
-        case 0xD000:
+        // Draw
+        case 0xD000: 
             printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
             cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
             break;
+        // Key press
         case 0xE000:
             switch(cpu->opcode & 0x00FF){
                 case 0x009E:
@@ -192,6 +240,7 @@ void cycle(chip8 *cpu){
                     break;   
             }
             break;
+        
         case 0xF000:
             switch(cpu->opcode & 0x00FF){
                 case 0x0007:
