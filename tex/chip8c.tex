@@ -126,7 +126,9 @@ Compact Hexadecimal Interpretive Programming – 8-bit
 \section*{File Structure}
 \begin{itemize}
 	\item cpu.c - Contains the registers for the Chip8 emulator, the memory that the program is read into and the font that is read at the start
+	\item cpu.h - Contains the structure for the CPU, RAM, keyboard and graphics array
 	\item graphics.c - Contains the display graphics for the Chip8 emulator using SDL2
+	\item graphics.h - Contains the graphics functions start, draw and stop
 	\item main.c - Driver program that will read in the rom and start the CPU and graphics
 	\item chip8d.c - Dissassembler to dissassemble the roms, use hexeditor for clarity
 \end{itemize}
