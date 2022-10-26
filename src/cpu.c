@@ -2,27 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cpu.h"
+#include "graphics.h"
 //registers here
 
 
-int font_reg[80] = {
-    0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-    0x20, 0x60, 0x20, 0x20, 0x70, // 1
-    0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-    0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-    0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-    0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-    0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-    0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-    0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-    0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-    0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-    0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-    0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-    0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-    0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-    0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-};
 //ram 4k
 unsigned char memory[0x1000];
 //graphics screen
@@ -222,44 +205,48 @@ void cycle(chip8 *cpu){
         case 0xD000: 
             unsigned short posx = cpu->V[(cpu->opcode & 0x0F00)>>8];
             unsigned short posy = cpu->V[(cpu->opcode & 0x00F0)>>4];
-            unsigned short nbyte = cpu->V[cpu->opcode & 0x000F];
-            unsigned short currindex = cpu->index;
+            unsigned short height = cpu->opcode & 0x000F;
+            unsigned short pixel;
+            printf("these are the values 0x%01x 0x%01x %d \n", posx, posy, cpu->index);
+            cpu->V[0xF] = 0;
             
             
-            
-            printf("these are the values 0x%01x 0x%01x %d \n", posx, posy, nbyte);
-            for(int i = 0; i < nbyte; i++){
-                for(int i = 0; i < memory[currindex & 0x00FF]; i++){
-                    if(memory[currindex & 0x00FF]){
-                        gfx[posx*64 + posy] = 1;
-                    }
-                    currindex +=8;
-                }
-                
-            }
-            for(int i = 0; i < 64*32; i++){
-                if(!(i % 64)){
-                    printf("\n");
-                }
-                printf("%d", gfx[i]);
-            }
+           for(int y=0; y<height; y++){
 
-            // printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
-            // cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
+                pixel = memory[cpu->index + y];
+                for(int x=0; x < 8; x++){
+                    
+                    if((pixel & (0x80 >> x)) != 0){
+                        if(gfx[64*(posy+y) + (posx+x)] == 1){
+                            cpu->V[0xF] = 1;
+                        }
+                        gfx[64*(posy+y) + (posx+x)] ^=1;
+                    }
+                }
+           }
+           for(int i = 0;i < 64*32; i++){
+            if(!(i % 64)){
+                printf("\n");
+            }
+            printf("%d", gfx[i]);
+           }
+
+            printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
+            cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
              
             break;
         // Key press
         case 0xE000:
             switch(cpu->opcode & 0x00FF){
                 case 0x009E:
-                     if (key[(cpu->opcode & 0x0F00) >> 8] != 0){
+                     if (key[cpu->V[(cpu->opcode & 0x0F00) >> 8]] != 0){
                         cpu->program_counter += 2;
                      }
                         
                     printf("Skip next instruction if key in Vx (0x%01X) is pressed, PC+=2\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x00A1:
-                    if (key[(cpu->opcode & 0x0F00) >> 8] == 0){
+                    if (key[cpu->V[(cpu->opcode & 0x0F00) >> 8]] == 0){
                             cpu->program_counter += 2;
                         }
                     printf("Skip next instruction if key in Vx (0x%01X) is not perssed, PC+=2\n", cpu->opcode & 0x0F00);
@@ -270,39 +257,51 @@ void cycle(chip8 *cpu){
         case 0xF000:
             switch(cpu->opcode & 0x00FF){
                 case 0x0007:
-                    cpu->V[cpu->opcode & 0x0F00] = cpu->delay_timer;
+                    cpu->V[(cpu->opcode & 0x0F00) >> 8] = cpu->delay_timer;
                     printf("Vx 0x%01X  = Delay Timer\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x000A:
+                    cpu->key_flag = 0;
                     for(int i = 0; i < 0x10; i++){
                         if(key[i]){
-                            cpu->V[cpu->opcode & 0x0F00] = key[i];
+                            cpu->V[(cpu->opcode & 0x0F00) >> 8] = key[i];
+                            cpu->key_flag = 1;
                         }
                     }
                     printf("Exection stops until a key is pressed, store value of key in Vx 0x%01X\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0015:
-                    cpu->delay_timer = cpu->V[cpu->opcode & 0x0F00];
+                    cpu->delay_timer = cpu->V[(cpu->opcode & 0x0F00) >> 8];
                     printf("Set delay timer to cpu->value of Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0018:
-                    cpu->sound_timer = cpu->V[cpu->opcode & 0x0F00];
+                    cpu->sound_timer = cpu->V[(cpu->opcode & 0x0F00) >> 8];
                     printf("Set sound timer to value of Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x001E:
-                    cpu->index = cpu->index + cpu->V[cpu->opcode & 0x0F00];
+                    cpu->index = cpu->index + cpu->V[(cpu->opcode & 0x0F00) >> 8];
                     printf("Index register + Vx 0x%01X (2nd byte) is stored in Index Register\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0029:
+                    cpu->index =  cpu->V[(cpu->opcode & 0x0F00) >> 8] * 0x5;
                     printf("Index register is set equal to the location for hexadecimal sprite corresponding to value in Vx 0x%01X\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0033:
+                    memory[cpu->index] = cpu->V[(cpu->opcode & 0x0F00) >> 8]/100;
+                    memory[cpu->index + 1] = ((cpu->V[(cpu->opcode & 0x0F00) >> 8])/10)%10;
+                    memory[cpu->index + 2] = ((cpu->V[(cpu->opcode & 0x0F00) >> 8])/100)%10;
                     printf("Store BCD of Vx 0x%01X in Index Register, Index Register+1, and Index Register+2\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0055:
+                    for(int i = 0; i < cpu->V[(cpu->opcode & 0x0F00)>>8]; i++){
+                        memory[cpu->index + i] = cpu->V[i];
+                    }
                     printf("Store registers V0 - Vx 0x%01X (2nd byte) in in memory starting at address in Index register\n", cpu->opcode & 0x0F00);
                     break;
                 case 0x0065:
+                    for(int i = 0; i < cpu->V[(cpu->opcode & 0x0F00)>>8]; i++){
+                        cpu->V[i] = memory[cpu->index + i];
+                    }
                     printf("Read values from memory starting at Index register and store them in V0 through Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
                     break;
             }
