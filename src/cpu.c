@@ -266,14 +266,7 @@ void cycle(chip8 *cpu){
                     }
                 }
            }
-           for(int i = 0;i < 64*32; i++){
-            if(!(i % 64)){
-                printf("\n");
-            }
-            printf("%d", gfx[i]);
-           }
-           printf("\n");
-
+            cpu->draw_flag = 1;
             printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
             cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
              
@@ -296,7 +289,6 @@ void cycle(chip8 *cpu){
                     break;   
             }
             break;
-        
         case 0xF000:
             switch(cpu->opcode & 0x00FF){
                 case 0x0007:
@@ -350,5 +342,18 @@ void cycle(chip8 *cpu){
             }
             break;
         }
-    
+        //decrement the delay timer 
+        if (cpu->delay_timer > 0)
+            --cpu->delay_timer;
+            printf("this is delay timer %d\n", cpu->delay_timer);
+        //decrement the sound timer
+        if (cpu->sound_timer > 0)
+        {
+            if (cpu->sound_timer == 1){
+                //fprintf(stdout, "\aBeep!\n" );
+                printf("beep\n");
+            }
+            --cpu->sound_timer;
+            printf("this is sound timer %d\n", cpu->sound_timer);
+        } 
 }
