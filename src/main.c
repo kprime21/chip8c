@@ -23,7 +23,7 @@ int main(){
     start_graphics(&graphics, &renderer,&texture);
     chip8 cpu;
     initialize(&cpu);
-    load_rom(&cpu, "PONG");
+    load_rom(&cpu, "BLITZ");
     //make clock run 8 instructions per 1/60fps
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;
@@ -32,6 +32,7 @@ int main(){
     while(cpu.run_flag){
         for(int i =0; i<CLOCK_CYCLE;i++)
         {
+            printf("0x%04x\n", cpu.opcode);
             cycle(&cpu);
         }
         long long delta = millis() - execTime;
@@ -42,6 +43,12 @@ int main(){
                 draw_graphics(gfx,renderer);
                 cpu.draw_flag = 0;
         }
+
+        do {
+        process_key(&cpu);
+        } while (cpu.pause_flag && cpu.run_flag);
+
+        dec_timer(&cpu);
         execTime = millis();      
     }    
 }
