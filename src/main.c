@@ -16,14 +16,14 @@ long long millis() {
 }
 
 int main(){
+    printf("\a");
     SDL_Window *graphics;
     SDL_Renderer *renderer;
-    SDL_Texture *texture;
     SDL_Init(SDL_INIT_EVERYTHING);
-    start_graphics(&graphics, &renderer,&texture);
+    start_graphics(&graphics, &renderer);
     chip8 cpu;
     initialize(&cpu);
-    load_rom(&cpu, "BLITZ");
+    load_rom(&cpu, "PONG");
     //make clock run 8 instructions per 1/60fps
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;

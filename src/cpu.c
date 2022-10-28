@@ -382,8 +382,7 @@ void dec_timer(chip8* cpu){
         if (cpu->sound_timer > 0)
         {
             if (cpu->sound_timer == 1){
-                //fprintf(stdout, "\aBeep!\n" );
-                printf("beep\n");
+                printf("\a");
             }
             --cpu->sound_timer;
             printf("this is sound timer %d\n", cpu->sound_timer);

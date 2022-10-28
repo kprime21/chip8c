@@ -4,20 +4,13 @@
 #include "cpu.h"
 #include "graphics.h"
 
-void start_graphics(SDL_Window** window, SDL_Renderer** renderer, SDL_Texture** texture){
+void start_graphics(SDL_Window** window, SDL_Renderer** renderer){
     *window = SDL_CreateWindow("Chip8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 64, 32, SDL_WINDOW_SHOWN |
         SDL_WINDOW_OPENGL | 
         SDL_WINDOW_RESIZABLE |
         SDL_WINDOW_ALLOW_HIGHDPI );
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
-
-    *texture = SDL_CreateTexture(*renderer, 
-        SDL_PIXELFORMAT_RGBA8888, 
-        SDL_TEXTUREACCESS_TARGET, 
-        64, 
-        32
-    );
     
     SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0);
     SDL_RenderClear(*renderer);
@@ -44,8 +37,8 @@ void draw_graphics(unsigned char* gfx, SDL_Renderer* renderer){
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         }
         SDL_RenderDrawPoint(renderer, x, y);
-        SDL_RenderPresent(renderer);
         x++;
     }
+    SDL_RenderPresent(renderer);
 
 }
