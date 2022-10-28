@@ -342,8 +342,11 @@ void cycle(chip8 *cpu){
             }
             break;
         }
-        //decrement the delay timer 
-        if (cpu->delay_timer > 0)
+        
+}
+
+void dec_timer(chip8* cpu){
+    if (cpu->delay_timer > 0)
             --cpu->delay_timer;
             printf("this is delay timer %d\n", cpu->delay_timer);
         //decrement the sound timer
@@ -356,4 +359,8 @@ void cycle(chip8 *cpu){
             --cpu->sound_timer;
             printf("this is sound timer %d\n", cpu->sound_timer);
         } 
+}
+
+void process_key(chip8* cpu){
+    
 }

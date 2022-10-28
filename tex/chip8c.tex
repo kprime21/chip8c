@@ -43,7 +43,7 @@ Compact Hexadecimal Interpretive Programming – 8-bit
 \end{itemize}
 \subsection*{Display}
 \begin{itemize}
-	\item 60Hz - 60 times per second
+	\item 60Hz - 60 times per second. Run 8 instructions then update frames. This way we have ~500Hz for the CPU cycles.
 	\item sprite consists of 8 bits
 	\item sprites are between 1 and 15 bytes tall
 	\item 0 bits are transparent and 1 bits flip pixel locations
@@ -135,7 +135,6 @@ Compact Hexadecimal Interpretive Programming – 8-bit
 \section*{Main}
 \begin{itemize}
 	\item Work on keyboard input/interrupts and graphics working together
-	\item work on timing to get delay and sound at 60Hz and decide on how many instruction cycles per second
 	\item work on main method class
 \end{itemize}
 

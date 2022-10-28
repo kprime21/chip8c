@@ -26,8 +26,8 @@ void initialize(chip8 *cpu);
 void reset(chip8 *cpu); //implement
 void load_rom(chip8 *cpu, char *rom);
 void cycle(chip8 *cpu);
-void clock(chip8 *cpu); //decrement sound and delay timers
-void key_event(chip8 *cpu); //process the user keyboard event 
+void dec_timer(chip8 *cpu); //decrement sound and delay timers
+void process_key(chip8 *cpu); //process the user keyboard event 
 
 const static int font_reg[80] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

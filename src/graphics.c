@@ -12,8 +12,6 @@ void start_graphics(SDL_Window** window, SDL_Renderer** renderer, SDL_Texture** 
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
 
-    printf("next address of renderer %d\n", &(*renderer));
-
     *texture = SDL_CreateTexture(*renderer, 
         SDL_PIXELFORMAT_RGBA8888, 
         SDL_TEXTUREACCESS_TARGET, 
