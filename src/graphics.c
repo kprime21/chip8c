@@ -3,9 +3,10 @@
 #include <SDL2/SDL.h>
 #include "cpu.h"
 #include "graphics.h"
+#define SCALE 8
 
 void start_graphics(SDL_Window** window, SDL_Renderer** renderer){
-    *window = SDL_CreateWindow("Chip8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 64, 32, SDL_WINDOW_SHOWN |
+    *window = SDL_CreateWindow("Chip8 Emulator by kprime21", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 64*SCALE, 32*SCALE, SDL_WINDOW_SHOWN |
         SDL_WINDOW_OPENGL | 
         SDL_WINDOW_RESIZABLE |
         SDL_WINDOW_ALLOW_HIGHDPI );
@@ -36,7 +37,12 @@ void draw_graphics(unsigned char* gfx, SDL_Renderer* renderer){
         else{
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         }
-        SDL_RenderDrawPoint(renderer, x, y);
+        //scale to resolution
+        for(int j = 0; j < SCALE; j++){
+            for(int k = 0; k<SCALE; k++){
+                SDL_RenderDrawPoint(renderer, x*SCALE+j, y*SCALE+k);
+            }
+        }
         x++;
     }
     SDL_RenderPresent(renderer);

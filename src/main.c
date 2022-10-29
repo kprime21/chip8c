@@ -27,6 +27,7 @@ int main(){
     //make clock run 8 instructions per 1/60fps
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;
+    long long frames = millis();
     
 
     while(cpu.run_flag){
@@ -41,6 +42,8 @@ int main(){
         }
         if(cpu.draw_flag){
                 draw_graphics(gfx,renderer);
+                printf("YOYOYOYOYOYO %ld\n", millis()-frames);
+                frames = millis();
                 cpu.draw_flag = 0;
         }
 

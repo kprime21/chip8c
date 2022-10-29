@@ -23,7 +23,6 @@ typedef struct chip8{
 } chip8;
 
 void initialize(chip8 *cpu);
-void reset(chip8 *cpu); //implement
 void load_rom(chip8 *cpu, char *rom);
 void cycle(chip8 *cpu);
 void dec_timer(chip8 *cpu); //decrement sound and delay timers

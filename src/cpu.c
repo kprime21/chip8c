@@ -266,7 +266,6 @@ void cycle(chip8 *cpu){
             unsigned short posy = cpu->V[(cpu->opcode & 0x00F0)>>4];
             unsigned short height = cpu->opcode & 0x000F;
             unsigned short pixel;
-            printf("these are the values 0x%01x 0x%01x %d \n", posx, posy, cpu->index);
             cpu->V[0xF] = 0;
             
             
@@ -285,8 +284,7 @@ void cycle(chip8 *cpu){
            }
             cpu->draw_flag = 1;
             cpu->program_counter +=2;
-            printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,
-            cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
+            printf("Read 0x%01X of bytes store in last byte starting at Index. Display at location (Vx 0x%01X,Vy 0x%01X), if collision Vf = 1, if off screen wrap around \n", cpu->opcode & 0x000F,cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
              
             break;
         // Key press
@@ -376,7 +374,6 @@ void cycle(chip8 *cpu){
 void dec_timer(chip8* cpu){
     if (cpu->delay_timer > 0){
             --cpu->delay_timer;
-            printf("this is delay timer %d\n", cpu->delay_timer);
     }
         //decrement the sound timer
         if (cpu->sound_timer > 0)
@@ -385,7 +382,6 @@ void dec_timer(chip8* cpu){
                 printf("\a");
             }
             --cpu->sound_timer;
-            printf("this is sound timer %d\n", cpu->sound_timer);
         } 
 }
 
@@ -405,7 +401,6 @@ void process_key(chip8* cpu){
             }
 
             for(int i = 0; i < 16; i++){
-                printf("%d", cpu->key[i]);
                 if(event.key.keysym.sym == keyboard[i]){
                     cpu->key[i] = 1;
                 }
