@@ -73,3 +73,5 @@ tex
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+*.tex
+*.pdf
