@@ -23,7 +23,7 @@ int main(){
     start_graphics(&graphics, &renderer);
     chip8 cpu;
     initialize(&cpu);
-    load_rom(&cpu, "test_opcode.ch8");
+    load_rom(&cpu, "BLITZ");
     //make clock run 8 instructions per 1/60fps
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;

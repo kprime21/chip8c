@@ -318,11 +318,15 @@ void cycle(chip8 *cpu){
                     cpu->key_flag = 0;
                     for(int i = 0; i < 0x10; i++){
                         if(cpu->key[i]){
-                            cpu->V[(cpu->opcode & 0x0F00) >> 8] = cpu->key[i];
+                            cpu->V[(cpu->opcode & 0x0F00) >> 8] = i;
                             cpu->key_flag = 1;
                         }
-                    cpu->program_counter +=2;
+                    
                     }
+                    if(cpu->key_flag == 0){
+                        break;
+                    }
+                    cpu->program_counter +=2;
                     // printf("Exection stops until a key is pressed, store value of key in Vx 0x%01X\n", cpu->V[cpu->opcode & 0x0F00]);
                     break;
                 case 0x0015:
