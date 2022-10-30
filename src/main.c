@@ -5,7 +5,7 @@
 #include <time.h>
 #include <sys/time.h>
 #define CLOCK_CYCLE 8
-#define FPS 60
+#define FPS 120
 
 long long millis() {
   struct timeval time;

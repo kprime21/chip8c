@@ -3,6 +3,7 @@
 #include <string.h>
 #include "cpu.h"
 #include "graphics.h"
+#include <time.h>
 //registers here
 
 
@@ -95,7 +96,7 @@ void cycle(chip8 *cpu){
                     // printf("RET, return from subroutine\n");
                     break;
                 default:
-                    // printf("Unkown opcode, exiting... \n");
+                    break;
             }
             break;
         case 0x1000: //... 0x1FFF:
@@ -233,6 +234,7 @@ void cycle(chip8 *cpu){
                 // printf("Vx 0x%01X = Vx << Vy 0x%01X, if MSB of Vx is 1, set Vf to 1\n",cpu->opcode & 0x0F00, cpu->opcode & 0x00F0);
                 break;
             default:
+                break;
                 // printf("Unkown opcode, exiting... \n");
             }
             break;
@@ -257,7 +259,8 @@ void cycle(chip8 *cpu){
             break;
         // case 0xC000 ... 0xCFFF:
         case 0xC000:
-            cpu->V[(cpu->opcode & 0x0F00) >> 8] = (rand() % 256) & (cpu->opcode & 0x00FF);
+            srand(time(NULL)); //generate random blocks with time 
+            cpu->V[(cpu->opcode & 0x0F00) >> 8] = (rand() % (0xFF + 1)) & (cpu->opcode & 0x00FF);
             cpu->program_counter +=2;
             // printf("Generate a random number, then AND with last two bytes  0x%02X and store in Vx(0x%01X)\n", cpu->opcode & 0x00FF,cpu->opcode & 0x0F00);
             break;
@@ -305,6 +308,8 @@ void cycle(chip8 *cpu){
                     cpu->program_counter +=2;
                     // printf("Skip next instruction if key in Vx (0x%01X) is not perssed, PC+=2\n", cpu->opcode & 0x0F00);
                     break;   
+                default:
+                    break;
             }
             break;
         case 0xF000:
@@ -360,6 +365,8 @@ void cycle(chip8 *cpu){
                     for(int i = 0; i <= ((cpu->opcode & 0x0F00)>>8); i++){
                         memory[cpu->index + i] = cpu->V[i];
                     }
+                    //index = index + X +1
+                    cpu->index = ((cpu->opcode & 0x0F00) >> 8) + 1;
                     cpu->program_counter +=2;
                     // printf("Store registers V0 - Vx 0x%01X (2nd byte) in in memory starting at address in Index register\n", cpu->opcode & 0x0F00);
                     break;
@@ -367,10 +374,16 @@ void cycle(chip8 *cpu){
                     for(int i = 0; i <= ((cpu->opcode & 0x0F00)>>8); i++){
                         cpu->V[i] = memory[cpu->index + i];
                     }
+                    //index = index + X +1
+                    cpu->index = ((cpu->opcode & 0x0F00) >> 8) + 1;
                     cpu->program_counter +=2;
                     // printf("Read values from memory starting at Index register and store them in V0 through Vx 0x%01X (2nd byte)\n", cpu->opcode & 0x0F00);
                     break;
+                default:
+                    break;
             }
+            break;
+        default:
             break;
         }
         
