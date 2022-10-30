@@ -66,3 +66,10 @@ out
 #other files
 roms
 tex
+
+#LaTeX files + build tool aux
+*.aux
+*.log
+*.synctex.gz
+*.fdb_latexmk
+*.fls
