@@ -1,15 +1,14 @@
 ---
 author:
-- "**kprime21**"
+- "[kprime21](https://github.com/kprime21)"
 title:  Chip8 Emulator in C
 ---
 
-# Overview {#overview .unnumbered}
+# Overview
 
-A Compact Hexadecimal Interpretive Programming 8-bit emulator written in
-the C Programming Language
+Compact Hexadecimal Interpretive Programming -- 8-bit.
 
-## Components {#components .unnumbered}
+## Components
 
 -   Memory - 4kB ram (4096 bytes - 4096 address lines each line is 1
     byte)
@@ -30,7 +29,7 @@ the C Programming Language
 
     -   15 General purpose registers - V0 - VF (8 bits)
 
-## Memory {#memory .unnumbered}
+## Memory
 
 -   all memory is RAM, 4096 bytes.
 
@@ -47,7 +46,7 @@ the C Programming Language
 -   font located before program 0x000-0x1FF (popular area - 0x050 -
     0x09F)
 
-## Font {#font .unnumbered}
+## Font
 
 -   font character should be 4px x 5px
 
@@ -56,10 +55,10 @@ the C Programming Language
 -   stored in memory, index register set to specific font in memory to
     draw it
 
-## Display {#display .unnumbered}
+## Display
 
 -   60Hz - 60 times per second. Run 8 instructions then update frames.
-    This way we have a desired  500Hzfor the CPU cycles.
+    This way we have  500Hz for the CPU cycles.
 
 -   sprite consists of 8 bits
 
@@ -67,13 +66,13 @@ the C Programming Language
 
 -   0 bits are transparent and 1 bits flip pixel locations
 
-## Stack {#stack .unnumbered}
+## Stack
 
 -   stack(LiFo) to call and return from subroutines
 
 -   16 bit addresses (12 bits useful) are saved here
 
-## Timers {#timers .unnumbered}
+## Timers
 
 -   two timer registers - the delay timer and sound timer
 
@@ -82,7 +81,7 @@ the C Programming Language
 
 -   sound timer beeps as long as it's above 0
 
-## Keypad {#keypad .unnumbered}
+## Keypad
 
 -   123C
 
@@ -92,7 +91,7 @@ the C Programming Language
 
 -   A0BF
 
-## Fetch/decode/excute loop {#fetchdecodeexcute-loop .unnumbered}
+## Fetch/decode/excute loop
 
 -   fetch the instruction from memory at current PC (program counter)
 
@@ -124,7 +123,7 @@ the C Programming Language
 -   execute: do what each instruction should do in each case of the
     switch
 
-## Opcodes {#opcodes .unnumbered}
+## Opcodes
 
 1.  0nnn - ignored by modern interpreters.
 
@@ -215,7 +214,7 @@ the C Programming Language
 35. Fx65 - LD Vx, \[I\] - Read values from memory and store them from V0
     through Vx.
 
-# File Structure {#file-structure .unnumbered}
+# File Structure
 
 -   cpu.c - Contains the registers for the Chip8 emulator, the memory
     that the program is read into and the font that is read at the start
@@ -234,13 +233,13 @@ the C Programming Language
 -   chip8d.c - Dissassembler to dissassemble the roms, use hexeditor for
     clarity
 
-# References {#references .unnumbered}
+# References
 
 -   https://tobiasvl.github.io/blog/write-a-chip-8-emulator/
 
 -   http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
-## To-Do {#to-do .unnumbered}
+# To-Do
 
 -   Clean up opcodes, bitwise arithmetic and comments
 
