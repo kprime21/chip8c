@@ -1,6 +1,6 @@
 ---
 author:
-- "[kprime21](https://github.com/kprime21)"
+- kprime21
 title:  Chip8 Emulator in C
 ---
 
