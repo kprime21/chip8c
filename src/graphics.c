@@ -3,7 +3,6 @@
 #include <SDL2/SDL.h>
 #include "cpu.h"
 #include "graphics.h"
-#define SCALE 8
 
 void start_graphics(SDL_Window** window, SDL_Renderer** renderer){
     *window = SDL_CreateWindow("Chip8 Emulator by kprime21", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 64*SCALE, 32*SCALE, SDL_WINDOW_SHOWN |

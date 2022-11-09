@@ -7,6 +7,7 @@
 #define CLOCK_CYCLE 8
 #define FPS 120
 
+
 long long millis() {
   struct timeval time;
   gettimeofday(&time, NULL);
@@ -17,19 +18,18 @@ long long millis() {
 
 int main(){
     printf("\a");
-    SDL_Window *graphics;
+    SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Init(SDL_INIT_EVERYTHING);
-    start_graphics(&graphics, &renderer);
+    start_graphics(&window, &renderer);
     chip8 cpu;
     initialize(&cpu);
-    load_rom(&cpu, "PONG");
-    //make clock run 8 instructions per 1/60fps
+    load_rom(&cpu, "test_opcode.ch8");
+    //make clock run 8 instructions per 1/60s
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;
     long long frames = millis();
     
-
     while(cpu.run_flag){
         for(int i =0; i<CLOCK_CYCLE;i++)
         {
@@ -53,5 +53,6 @@ int main(){
 
         dec_timer(&cpu);
         execTime = millis();      
-    }    
+    }  
+    destroy_graphics(window, renderer);  
 }

@@ -241,6 +241,4 @@ Compact Hexadecimal Interpretive Programming -- 8-bit.
 
 # To-Do
 
--   Clean up opcodes, bitwise arithmetic and comments
-
 -   Use buffer frame method over draw flag method to get accurate FPS

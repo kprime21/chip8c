@@ -1,4 +1,11 @@
 #include <SDL2/SDL.h>
+#define PIXEL_MATRIX 2048 //64*32
+#define RAM 4096 //4Kb
+#define NUM_KEY 16 //number of keys on controller
+#define V_REG_NUM 16 //number of V registers
+#define FONT_SIZE 80 //number of bytes in fonts
+#define PC_START 0x200 //address PC will start reading program
+
 typedef struct chip8{
     //hold the 2 byte opcode
     unsigned short opcode;
