@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#define SCALE 8
 
 //double pointers because we are changing what they point to
 void start_graphics(SDL_Window** window, SDL_Renderer** renderer);
