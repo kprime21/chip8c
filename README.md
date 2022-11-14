@@ -240,5 +240,3 @@ Compact Hexadecimal Interpretive Programming -- 8-bit.
 -   http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 
 # To-Do
-
--   Use buffer frame method over draw flag method to get accurate FPS
