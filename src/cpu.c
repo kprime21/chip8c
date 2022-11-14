@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cpu.h"
-#include "graphics.h"
 #include <time.h>
 
 //ram 4k
-unsigned char memory[0x1000];
+unsigned char memory[RAM];
 //graphics screen
-unsigned char gfx[64 * 32];
+unsigned char gfx[WIDTH * HEIGHT];
 
 
 //set addressing registers to 0
@@ -231,10 +230,10 @@ void cycle(chip8 *cpu){
                 for(int x=0; x < 8; x++){
                     
                     if((pixel & (0x80 >> x)) != 0){
-                        if(gfx[64*(posy+y) + (posx+x)] == 1){
+                        if(gfx[WIDTH*(posy+y) + (posx+x)] == 1){
                             cpu->V[0xF] = 1;
                         }
-                        gfx[64*(posy+y) + (posx+x)] ^=1;
+                        gfx[WIDTH*(posy+y) + (posx+x)] ^=1;
                     }
                 }
            }

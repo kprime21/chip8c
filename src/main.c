@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/time.h>
-#define CLOCK_CYCLE 8
-#define FPS 120
+#define CLOCK_CYCLE 9
+#define FPS 60
 
 
 long long millis() {
@@ -20,20 +20,21 @@ int main(){
     printf("\a");
     SDL_Window *window;
     SDL_Renderer *renderer;
+    SDL_Texture *texture;
     SDL_Init(SDL_INIT_EVERYTHING);
-    start_graphics(&window, &renderer);
+    start_graphics(&window, &renderer, &texture);
     chip8 cpu;
     initialize(&cpu);
-    load_rom(&cpu, "test_opcode.ch8");
+    load_rom(&cpu, "PONG.ch8");
     //make clock run 8 instructions per 1/60s
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;
     long long frames = millis();
+    uint32_t *pixel_buffer = malloc((WIDTH * HEIGHT) * sizeof(uint32_t));
     
     while(cpu.run_flag){
         for(int i =0; i<CLOCK_CYCLE;i++)
         {
-            printf("0x%04x\n", cpu.opcode);
             cycle(&cpu);
         }
         long long delta = millis() - execTime;
@@ -41,8 +42,8 @@ int main(){
             usleep((desiredDelta-delta)*1000);
         }
         if(cpu.draw_flag){
-                draw_graphics(gfx,renderer);
-                printf("YOYOYOYOYOYO %ld\n", millis()-frames);
+                buffer_graphics(&cpu, pixel_buffer, gfx, renderer);
+                draw_graphics(pixel_buffer, renderer, texture);
                 frames = millis();
                 cpu.draw_flag = 0;
         }
@@ -54,5 +55,5 @@ int main(){
         dec_timer(&cpu);
         execTime = millis();      
     }  
-    destroy_graphics(window, renderer);  
+    destroy_graphics(window, renderer, texture);  
 }
