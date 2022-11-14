@@ -30,12 +30,11 @@ int main(){
     long long execTime = millis();
     const long long desiredDelta = 1000/FPS;
     long long frames = millis();
-    uint32_t *pixel_buffer = malloc((64 * 32) * sizeof(uint32_t));
+    uint32_t *pixel_buffer = malloc((WIDTH * HEIGHT) * sizeof(uint32_t));
     
     while(cpu.run_flag){
         for(int i =0; i<CLOCK_CYCLE;i++)
         {
-            // printf("0x%04x\n", cpu.opcode);
             cycle(&cpu);
         }
         long long delta = millis() - execTime;
@@ -45,7 +44,6 @@ int main(){
         if(cpu.draw_flag){
                 buffer_graphics(&cpu, pixel_buffer, gfx, renderer);
                 draw_graphics(pixel_buffer, renderer, texture);
-                printf("YOYOYOYOYOYO %ld\n", millis()-frames);
                 frames = millis();
                 cpu.draw_flag = 0;
         }
@@ -57,5 +55,5 @@ int main(){
         dec_timer(&cpu);
         execTime = millis();      
     }  
-    destroy_graphics(window, renderer);  
+    destroy_graphics(window, renderer, texture);  
 }
